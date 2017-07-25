@@ -9,23 +9,17 @@ import glob
 # test if files exist
 Tester().test()
 
-# import urlopen
-if is_python_3:
-    from urllib.request import urlopen
-    from urllib.error import URLError
-else:
-    from urllib2 import urlopen
-
 
 ##########################################################################
 __version__ = "1.1.0"
 __help_string__ = "eBooker v" + __version__ + " Help\n==============" + \
-    ("=" * len(__version__)) + "\nhelp - show this help\nexit - quit the session\nabout - read about this tool\nedit - edit/create a file\nclear -\
+                  ("=" * len(__version__)) + "\nhelp - show this help\nexit - quit the session\nabout - read about this tool\nedit - edit/create a file\nclear -\
       clear the screen\ndebug - give you a list of commonly occurring issues\nserve - open your book in a web browser for reviewing"
 __about_string__ = "eBooker is a command-line tool which lets you create ebooks and other text files from command line with ease. \
 You don't have to be a programming expert or a nerd to use this. Anyone with a basic knowledge in computers can use this tool very easily."
-##########################################################################
 
+
+##########################################################################
 
 def install_markdown():
     ''' install markdown module if not found '''
@@ -33,6 +27,7 @@ def install_markdown():
         os.system("pip3 install markdown")
     else:
         os.system("easy_install --home pip; pip install markdown")
+
 
 is_unix = os.name == "posix"
 
@@ -54,7 +49,7 @@ def open_editor(fileString):
 
 def augment(filecontentsString):
     return "<!DOCTYPE html><html><head><title>" + "Your Book" + \
-        "</title></head>" + filecontentsString + "</body></html>"
+           "</title></head>" + filecontentsString + "</body></html>"
 
 
 def debug():
@@ -87,9 +82,15 @@ def debug():
 
 def internet():
     try:
-        urlopen("http://216.58.192.142", timeout=1)
+        import httplib
+    except:
+        import http.client as httplib
+    connect = httplib.HTTPConnection("www.google.com", timeout=1)
+    try:
+        connect.request("HEAD", "/")
+        connect.close()
         return True
-    except URLError:
+    except:
         return False
 
 
@@ -105,7 +106,8 @@ if not markdown_installed():
     if internet():
         install_markdown()
     else:
-        print("Your internet connection is either too slow or nonexistent! I cannot install the required packages for you.")
+        print(
+        "Your internet connection is either too slow or nonexistent! I cannot install the required packages for you.")
         sys.exit(1)
 
 import markdown
@@ -120,9 +122,10 @@ print(
     "  \___|____/ \___/ \___/|_|\_\___|_| v" + __version__ +
     "                       Running on Python " +
     str(sys.version_info[0]) + "!\n"
-    "\n"
-    "Type in \"help\" at the prompt for, of course, help."
+                               "\n"
+                               "Type in \"help\" at the prompt for, of course, help."
 )
+
 
 ##########################################################################
 
@@ -266,6 +269,7 @@ def cmd_exit():
 def cmd_help():
     print(__help_string__)
 
+
 ##########################################################################
 
 
@@ -291,6 +295,7 @@ def main():
             print(
                 "\"" + cmd + "\" is not a valid command. Type \"help\" for more options"
             )
+
 
 try:
     main()
